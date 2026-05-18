@@ -121,14 +121,14 @@ static int sgm_init_registers(void)
 	u8 rbuf = 2;
 
 	ret = ktd3137_read_reg(bkl_chip->client,0x00, &rbuf);
-	pr_info("%s: 0x00 reg = 0x%x, ret = %d\n",__func__, rbuf, ret);
+	pr_debug("%s: 0x00 reg = 0x%x, ret = %d\n",__func__, rbuf, ret);
 	if (0x18 == rbuf) {
-		pr_info("backlight ic is ktd3137 !\n");
+		pr_debug("backlight ic is ktd3137 !\n");
 		g_backlight_ic = 1;
 		ret = i2c_sgm_write(bkl_chip->client, 0x06, 0x1B);
 		ret = i2c_sgm_write(bkl_chip->client, 0x02, 0xc9);
 	} else {
-		pr_info("backlight ic is lm3697 !\n");
+		pr_debug("backlight ic is lm3697 !\n");
 		g_backlight_ic = 2;
 		ret = i2c_sgm_write(bkl_chip->client, 0x10, 0x03);
 		ret = i2c_sgm_write(bkl_chip->client, 0x13, 0x01);
@@ -161,7 +161,7 @@ int lm3697_brightness_set(uint16_t brightness)
 		err = i2c_sgm_write(bkl_chip->client, 0x23, 0x00);
 	}
 	if (err < 0)
-		pr_info("lm3697 set Backlight fail !\n");
+		pr_debug("lm3697 set Backlight fail !\n");
 	return err;
 }
 
@@ -203,7 +203,7 @@ void ktd3137_brightness_set_workfunc(struct ktd3137_chip *chip, int brightness)
 
 int sgm_brightness_set(uint16_t brightness)
 {
-	pr_info("[brightness]%s brightness = %d\n", __func__, brightness);
+	pr_debug("[brightness]%s brightness = %d\n", __func__, brightness);
 	if (g_backlight_ic == 1)
 		ktd3137_brightness_set_workfunc(bkl_chip, brightness);
 	else
@@ -236,7 +236,7 @@ int ktd_hbm_set(int hbm_mode)
 		pr_err("This is hbm mode 3\n");
 		break;
 	default:
-		pr_info("This isn't hbm mode\n");
+		pr_debug("This isn't hbm mode\n");
 		break;
 	}
 
@@ -248,22 +248,22 @@ int lm_hbm_set(int hbm_mode)
 	switch (hbm_mode) {
 	case HBM_MODE_DEFAULT:
 		i2c_sgm_write(bkl_chip->client, 0x18, 0x10);
-		pr_info("Turn off hbm mode \n");
+		pr_debug("Turn off hbm mode \n");
 		break;
 	case HBM_MODE_LEVEL1:
 		i2c_sgm_write(bkl_chip->client, 0x18, 0x13);
-		pr_info("This is hbm mode 1\n");
+		pr_debug("This is hbm mode 1\n");
 		break;
 	case HBM_MODE_LEVEL2:
 		i2c_sgm_write(bkl_chip->client, 0x18, 0x16);
-		pr_info("This is hbm mode 2\n");
+		pr_debug("This is hbm mode 2\n");
 		break;
 	case HBM_MODE_LEVEL3:
 		i2c_sgm_write(bkl_chip->client, 0x18, 0x19);
-		pr_info("This is hbm mode 3\n");
+		pr_debug("This is hbm mode 3\n");
 		break;
 	default:
-		pr_info("This isn't hbm mode\n");
+		pr_debug("This isn't hbm mode\n");
 		break;
 	}
 
@@ -272,7 +272,7 @@ int lm_hbm_set(int hbm_mode)
 
 int backlight_hbm_set(int hbm_mode)
 {
-	pr_info("%s hbm mode = %d\n", __func__, hbm_mode);
+	pr_debug("%s hbm mode = %d\n", __func__, hbm_mode);
 	if (g_backlight_ic == 1)
 		ktd_hbm_set(hbm_mode);
 	else
